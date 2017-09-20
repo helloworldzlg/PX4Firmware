@@ -54,12 +54,18 @@
 // #include <v1.0/mavlink_types.h>
 // #include <v1.0/common/mavlink_msg_heartbeat.h>
 
+extern void enable_image_capture(void);
+
 __EXPORT int partner_px4_main(int argc, char *argv[]);
 
 int partner_px4_main(int argc, char *argv[])
 {
 	PX4_INFO("partner_px4_main start!");
 
+	enable_image_capture();
+
+	//while(1){};
+#if 0
     struct vehicle_attitude_s att;
     memset(&att, 0, sizeof(att));
     orb_advert_t att_pub = orb_advertise(ORB_ID(vehicle_attitude), &att);
@@ -75,7 +81,7 @@ int partner_px4_main(int argc, char *argv[])
 
         sleep(1);
     }
-    
+#endif
 #if 0
 	while (1)
 	{

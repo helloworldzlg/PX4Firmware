@@ -234,7 +234,7 @@
  *
  * CAN1 is routed to the onboard transceiver.
  */
-#define GPIO_CAN1_RX	GPIO_CAN1_RX_3
+#define GPIO_CAN1_RX	GPIO_CAN1_RX_3   //SDIO
 #define GPIO_CAN1_TX	GPIO_CAN1_TX_3
 
 /*
@@ -255,7 +255,7 @@
  *
  * There are sensors on SPI1, and SPI2 is connected to the FRAM.
  */
-#define GPIO_SPI1_MISO	(GPIO_SPI1_MISO_1|GPIO_SPEED_50MHz)
+#define GPIO_SPI1_MISO	(GPIO_SPI1_MISO_2|GPIO_SPEED_50MHz)//(GPIO_SPI1_MISO_1|GPIO_SPEED_50MHz)
 #define GPIO_SPI1_MOSI	(GPIO_SPI1_MOSI_1|GPIO_SPEED_50MHz)
 #define GPIO_SPI1_SCK	(GPIO_SPI1_SCK_1|GPIO_SPEED_50MHz)
 

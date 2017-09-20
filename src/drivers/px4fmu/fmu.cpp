@@ -595,7 +595,8 @@ PX4FMU:: safety_check_button(void)
 	}
 
 	/* Turn the LED on if we have a 1 at the current bit position */
-	stm32_gpiowrite(GPIO_LED_SAFETY, !(pattern & (1 << blink_counter++)));
+	//stm32_gpiowrite(GPIO_LED_SAFETY, !(pattern & (1 << blink_counter++)));
+	pattern = pattern; ///////
 
 	if (blink_counter > 15) {
 		blink_counter = 0;
@@ -996,6 +997,29 @@ PX4FMU::update_pwm_out_state(void)
 void
 PX4FMU::cycle()
 {
+	////////////////////////////////
+	#define KEY_COUNT 20
+	static uint8_t key_ct = 0;
+
+	stm32_configgpio(KEY_CHECK_IN);
+
+	if(0 == stm32_gpioread(KEY_CHECK_IN))
+	{
+		if(key_ct == KEY_COUNT)
+		{
+			stm32_configgpio(POWER_OUT);
+			stm32_gpiowrite(POWER_OUT, 0);
+
+			stm32_gpiowrite(GPIO_LED_SAFETY, 1);
+		}
+
+		if(key_ct < KEY_COUNT)                      //20*100ms
+			key_ct++;
+	}
+	else
+	  key_ct = 0;
+	/////////////////////////////////
+
 	if (!_initialized) {
 		/* force a reset of the update rate */
 		_current_update_rate = 0;
@@ -1199,7 +1223,7 @@ PX4FMU::cycle()
 
 		if (_safety_disabled) {
 			/* safety switch disabled, turn LED on solid */
-			stm32_gpiowrite(GPIO_LED_SAFETY, 0);
+			//stm32_gpiowrite(GPIO_LED_SAFETY, 0);
 			_safety_off = true;
 
 		} else {

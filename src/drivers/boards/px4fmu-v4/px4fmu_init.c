@@ -195,6 +195,34 @@ stm32_boardinitialize(void)
 
 	/* configure LEDs */
 	up_ledinit();
+
+	//////////////////////////////// fmu_main
+	#define KEY_COUNT 20
+	static uint8_t key_ct = 0;
+	static uint8_t i;
+
+	stm32_configgpio(KEY_CHECK_IN);
+	stm32_configgpio(GPIO_LED_SAFETY);
+
+	while(0 == stm32_gpioread(KEY_CHECK_IN))
+	{
+		up_udelay(200000);
+
+		i ^= 1;
+		stm32_gpiowrite(GPIO_LED_SAFETY, i);
+
+		if(key_ct == KEY_COUNT)
+		{
+			stm32_configgpio(POWER_OUT);
+			stm32_gpiowrite(POWER_OUT, 1);
+
+			stm32_gpiowrite(GPIO_LED_SAFETY, 0);
+		}
+
+		if(key_ct < KEY_COUNT)
+			key_ct++;
+	}
+	/////////////////////////////////
 }
 
 /****************************************************************************
@@ -217,7 +245,7 @@ __EXPORT int nsh_archinitialize(void)
 	/* configure ADC pins */
 	stm32_configgpio(GPIO_ADC1_IN2);	/* BATT_VOLTAGE_SENS */
 	stm32_configgpio(GPIO_ADC1_IN3);	/* BATT_CURRENT_SENS */
-	stm32_configgpio(GPIO_ADC1_IN4);	/* VDD_5V_SENS */
+	stm32_configgpio(GPIO_ADC1_IN12);	/* VDD_5V_SENS */  //GPIO_ADC1_IN4
 	stm32_configgpio(GPIO_ADC1_IN11);	/* RSSI analog in */
 
 	/* configure power supply control/sense pins */
